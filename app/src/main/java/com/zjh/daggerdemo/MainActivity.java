@@ -8,8 +8,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ActivityComponent mActivityComponent;
+
+    @Inject
+    UserModel mUserModel;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +36,16 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+
+        mActivityComponent = DaggerActivityComponent.builder().
+                activityModule(new ActivityModule()).build();
+
+        mActivityComponent.inject(this);//)表示将调用Component的实现类将Module的生成的对象注入到mUserModel中
+
+        ((TextView) findViewById(R.id.textView)).
+                setText("ID:" + mUserModel.getId() + " Name: " + mUserModel.getName()
+                        + "  Gender: " + mUserModel.getGender());
     }
 
     @Override
